@@ -81,31 +81,26 @@ jobs:
         
     - name: Push to DockerHub
       run: docker push vilasvarghese/azure_pipeline
- 
-    - name: Azure Kubernetes set context
-      uses: Azure/aks-set-context@v1
-      with:
-        # Azure credentials i.e. output of `az ad sp create-for-rbac --sdk-auth`
-        creds: '${{secrets.AZURE_CREDENTIALS}}'
-        # Resource Group Name
-        resource-group: aks-demo-rg
-        # AKS Cluster Name
-        cluster-name: ga-aks-demo-cluster
 
-  # Create K8s secrets to pull images
-    - name: Create secret in Kubernetes cluster
-      uses: Azure/k8s-create-secret@v1.1
+    - name: Azure login
+      uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
       with:
-        # Container registry url
-        container-registry-url: https://index.docker.io/v1/
-        # Container registry username
-        container-registry-username: '${{secrets.DOCKER_HUB_USERNAME}}'
-        # Container registry password
-        container-registry-password:  '${{secrets.DOCKER_HUB_PASSWORD}}'
-        # Type of Kubernetes secret. For example, docker-registry or generic
-        secret-type: docker-registry
-        # Name of the secret. You can use this secret name in the Kubernetes YAML configuration file.
-        secret-name: docker-image-pull-secret
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      
+    - name: Set up kubelogin for non-interactive login
+      uses: azure/use-kubelogin@v1
+      with:
+        kubelogin-version: v0.0.25
+    - name: Get K8s context
+      uses: azure/aks-set-context@v3
+      with:
+        admin: "false"
+        cluster-name: ${{ env.CLUSTER_NAME }}
+        resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+        use-kubelogin: "true"
+ 
         
       # Deploy to k8s cluster
     - name: Deploy to Kubernetes cluster
@@ -113,8 +108,8 @@ jobs:
       with:        
         # Path to the manifest files which will be used for deployment.
         manifests: |
-          k8s/deployment.yml
-          k8s/service.yml
+          ./deploy-tomcat.yaml
+#          ./service.yml
         # Fully qualified resource URL of the image(s) to be used for substitutions on the manifest files Example: contosodemo.azurecr.io/helloworld:test
         images: '${{secrets.DOCKER_HUB_USERNAME}}/azure_pipeline'
         # Name of a docker-registry secret that has already been set up within the cluster. Each of these secret names are added under imagePullSecrets field for the workloads found in the input manifest files
