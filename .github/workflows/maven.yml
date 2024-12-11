@@ -97,8 +97,8 @@ jobs:
       uses: azure/aks-set-context@v3
       with:
         admin: "false"
-        cluster-name: ${{ env.CLUSTER_NAME }}
-        resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+        cluster-name: "ga-aks-demo-cluster"
+        resource-group: "aks-demo-rg"
         use-kubelogin: "true"
  
   # Create K8s secrets to pull images
