@@ -4,6 +4,10 @@ name: AKS Deploy
 on:
   workflow_dispatch:      
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   aks_deploy:
     runs-on: ubuntu-latest
