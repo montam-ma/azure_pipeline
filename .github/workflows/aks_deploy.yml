@@ -35,8 +35,8 @@ jobs:
       uses: azure/aks-set-context@v3
       with:
         admin: "false"
-        cluster-name: "ga-aks-demo-cluster"
-        resource-group: "aks-demo-rg"
+        cluster-name: "cluster-tender-cockatoo"
+        resource-group: "rg-pleased-manatee"
         use-kubelogin: "true"
  
       # Deploy to k8s cluster
