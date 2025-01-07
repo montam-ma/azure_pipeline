@@ -4,7 +4,7 @@ trigger:
 - main
 
 pool: 
-  name: vilasagentpool
+  name: mpool
   demands: Agent.Version -equals 4.248.0
 
 
