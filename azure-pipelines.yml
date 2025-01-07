@@ -20,7 +20,7 @@ stages:
   jobs:
   - job: Build
     displayName: Build
-    pool: vilasagentpool
+  #  pool: vilasagentpool
     steps:
     - task: Maven@4
       inputs:
