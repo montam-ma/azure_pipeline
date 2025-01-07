@@ -1,10 +1,10 @@
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+lt# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
 - main
 
 pool: 
-  name: mpool
+  name: default
   demands: Agent.Version -equals 4.248.0
 
 
